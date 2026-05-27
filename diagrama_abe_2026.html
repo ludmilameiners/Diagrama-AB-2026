@@ -146,46 +146,13 @@
   body.view-mode td.shift { cursor:default; pointer-events:none; }
   body.view-mode td.shift:hover { opacity:1; }
 
-  /* ============ RESPONSIVE (mobile y tablet) ============ */
-  @media (max-width: 900px) {
-    .topbar { padding: 10px 12px; gap: 8px; flex-wrap: wrap; }
-    .topbar h1 { font-size: 15px; flex-basis: 100%; }
-    .tabs { padding: 8px 10px 0; }
-    .tab { padding: 6px 10px; font-size: 11px; }
-
-    /* Apilar paneles: main arriba, side abajo */
-    .layout { flex-direction: column; padding: 8px; gap: 10px; }
-    .main-panel { width: 100%; min-width: 0; }
-    .side-panel { width: 100%; }
-
-    .card { padding: 10px; }
-
-    /* Tabla principal: ancho natural con scroll horizontal */
-    #scheduleTable { width: auto; min-width: 100%; table-layout: auto; }
-    th.emp-head, td.emp-name { width: 100px; min-width: 100px; font-size: 11px; padding: 3px 4px; }
-    td.shift { min-width: 26px; height: 26px; font-size: 11px; }
-
-    /* Tabla campo: ancho natural con scroll horizontal igual que tabla principal */
-    .campo-table { width: auto; min-width: 100%; table-layout: auto; }
-    .campo-table th.emp-head { width: 110px; min-width: 110px; }
-    .campo-table td.dt-name { width: 110px; min-width: 110px; max-width: 110px; font-size: 10px; padding: 3px 5px; }
-    .campo-table td.dt-name .dt-role { font-size: 9px; }
-    .campo-table td.dt-cell { min-width: 24px; height: 22px; font-size: 10px; }
-
-    /* Section title mas chico */
-    .campo-section-title { font-size: 13px; padding: 5px 8px; }
-
-    /* Picker mas grande para tocar con dedo */
-    .picker { width: auto; max-width: 90vw; }
-    .picker-btn { width: 44px; height: 40px; font-size: 15px; }
-  }
-
   @media (max-width: 500px) {
     .topbar h1 { font-size: 14px; }
     .mode-badge, .btn-export { font-size: 11px; padding: 4px 8px; }
     th.emp-head, td.emp-name { width: 90px; min-width: 90px; font-size: 10px; }
-    .campo-table th.emp-head { width: 95px; min-width: 95px; }
-    .campo-table td.dt-name { width: 95px; min-width: 95px; max-width: 95px; }
+    .campo-table th.emp-head { width: 90px; min-width: 90px; font-size: 10px; }
+    .campo-table td.dt-name { width: 90px; min-width: 90px; max-width: 90px; font-size: 10px; }
+    .campo-table td.dt-cell { min-width: 26px; height: 24px; }
   }
 
   /* EXPORT BUTTON */
@@ -199,9 +166,9 @@
     display:flex; align-items:center; gap:8px; }
   .campo-section-title .campo-divider { flex:1; height:1px; background:#c9d3e8; margin-left:6px; }
   /* Tabla única consolidada para todas las áreas */
-  .campo-area { background:#fff; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,.08);
-    overflow:hidden; }
-  .campo-table-wrap { overflow-x:auto; }
+  .campo-area { background:#fff; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .campo-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius:6px; }
+  /* (campo-table-wrap definido más arriba con sticky scroll) */
   .campo-table { border-collapse:collapse; width:100%; table-layout:fixed; }
   .campo-table th, .campo-table td { border:1px solid #d0d7e3; text-align:center; }
   .campo-table th { background:#1F4E78; color:#fff; font-weight:600; padding:3px 3px;
@@ -240,6 +207,40 @@
   .campo-table td.dt-cell.dt-na { background:#e0e0e0; color:#bbb; cursor:default; }
   body.view-mode td.dt-cell { cursor:default; pointer-events:none; }
   body.view-mode td.dt-cell:hover { opacity:1; }
+/* ============ RESPONSIVE (mobile y tablet) ============ */
+  @media (max-width: 900px) {
+    .topbar { padding: 10px 12px; gap: 8px; flex-wrap: wrap; }
+    .topbar h1 { font-size: 15px; flex-basis: 100%; }
+    .tabs { padding: 8px 10px 0; }
+    .tab { padding: 6px 10px; font-size: 11px; }
+
+    /* Apilar paneles: main arriba, side abajo */
+    .layout { flex-direction: column; padding: 8px; gap: 10px; }
+    .main-panel { width: 100%; min-width: 0; }
+    .side-panel { width: 100%; }
+
+    .card { padding: 10px; }
+
+    /* Tabla principal: ancho natural con scroll horizontal */
+    #scheduleTable { width: auto; min-width: 100%; table-layout: auto; }
+    th.emp-head, td.emp-name { width: 100px; min-width: 100px; font-size: 11px; padding: 3px 4px; }
+    td.shift { min-width: 26px; height: 26px; font-size: 11px; }
+
+    /* Tabla campo: ancho natural con scroll horizontal igual que tabla principal */
+    .campo-table { width: auto; min-width: 100%; table-layout: auto; }
+    .campo-table th.emp-head { width: 100px; min-width: 100px; font-size: 11px; padding: 3px 4px; }
+    .campo-table td.dt-name { width: 100px; min-width: 100px; max-width: 100px; font-size: 11px; padding: 3px 5px; }
+    .campo-table td.dt-name .dt-role { font-size: 9px; }
+    .campo-table td.dt-cell { min-width: 28px; height: 26px; font-size: 11px; }
+    .campo-table th { min-width: 28px; padding: 3px 2px; }
+
+    /* Section title mas chico */
+    .campo-section-title { font-size: 13px; padding: 5px 8px; }
+
+    /* Picker mas grande para tocar con dedo */
+    .picker { width: auto; max-width: 90vw; }
+    .picker-btn { width: 44px; height: 40px; font-size: 15px; }
+  }
 </style>
 </head>
 <body>
