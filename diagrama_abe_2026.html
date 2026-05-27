@@ -398,19 +398,18 @@ const SCHEDULES = {
   },
 };
 
-// Convert string schedules to arrays and ensure correct length
+// Convert string schedules to arrays and ensure correct length (idempotente)
 function initSchedules(){
   for(const [m, emps] of Object.entries(SCHEDULES)){
     const dim = daysInMonth(parseInt(m));
-    for(const [emp, str] of Object.entries(emps)){
-      const arr = str.split('');
-      // Pad or trim to correct length
+    for(const [emp, val] of Object.entries(emps)){
+      // Si ya es array, no hacer nada (idempotente)
+      const arr = Array.isArray(val) ? val : (typeof val === 'string' ? val.split('') : []);
       while(arr.length < dim) arr.push('X');
       SCHEDULES[m][emp] = arr.slice(0, dim);
     }
   }
 }
-initSchedules();
 
 // ============================================================
 // EMPLEADOS JORNADA DÍA — ABE planta + AB Agro campo
