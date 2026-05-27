@@ -165,7 +165,8 @@
     th.emp-head, td.emp-name { width: 100px; min-width: 100px; font-size: 11px; padding: 3px 4px; }
     td.shift { min-width: 26px; height: 26px; font-size: 11px; }
 
-    /* Tabla campo */
+    /* Tabla campo: ancho natural con scroll horizontal igual que tabla principal */
+    .campo-table { width: auto; min-width: 100%; table-layout: auto; }
     .campo-table th.emp-head { width: 110px; min-width: 110px; }
     .campo-table td.dt-name { width: 110px; min-width: 110px; max-width: 110px; font-size: 10px; padding: 3px 5px; }
     .campo-table td.dt-name .dt-role { font-size: 9px; }
@@ -270,7 +271,7 @@
     </div>
     <!-- SECCIÓN CAMPO: empleados jornada día (consolidada bajo la tabla principal) -->
     <div class="campo-section">
-      <div class="campo-section-title">🌾 AB Campo — Jornada Día (8-16hs) · <span id="campoMonthTitle"></span>
+      <div class="campo-section-title">🌾 AB Campo y resto de planta — Jornada Día (8-16hs) · <span id="campoMonthTitle"></span>
         <span class="campo-divider"></span>
       </div>
       <div id="campoContent"></div>
@@ -529,8 +530,8 @@ const DAYTIME_DEFAULTS = {
     })(),
     marcos:   Array(30).fill(''),
     amaya:    Array(30).fill(''),
-    renzo:    Array(30).fill(''),
-    leandro:  Array(30).fill(''),
+    renzo:    _fillSched(30, 'M', [[3,'F'],[7,'F'],[11,'F'],[15,'F'],[19,'F'],[23,'F'],[27,'F']]),
+    leandro:  _fillSched(30, 'M', [[4,'F'],[8,'F'],[12,'F'],[16,'F'],[20,'F'],[24,'F'],[28,'F']]),
   }
 };
 
