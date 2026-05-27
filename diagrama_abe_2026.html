@@ -918,181 +918,73 @@ function applyMode(){
   applyModeExtras();
 }
 
-// ============================================================
-// EXPORT TO EXCEL  (requiere conexión a internet para SheetJS)
-// ============================================================
-const SHIFT_FILL = {
-  M:'FFC000', T:'FF3333', N:'0070C0',
-  F:'00B050', V:'7030A0', X:'E0E0E0'
-};
-const SHIFT_FONT_COLOR = {
-  M:'000000', T:'FFFFFF', N:'FFFFFF',
-  F:'FFFFFF', V:'FFFFFF', X:'AAAAAA'
-};
+function applyModeExtras(){
+  // Mostrar/ocultar botón "Publicar en Drive" según modo
+  const publishBtn = document.getElementById('publishBtn');
+  if(publishBtn) publishBtn.style.display = editMode ? '' : 'none';
+}
 
+// ============================================================
+// EXPORT TO EXCEL (operarios + sección campo)
+// ============================================================
 function exportToExcel(){
   if(typeof XLSX === 'undefined'){
-    alert('La librería Excel no está disponible. Verificá la conexión a internet e intentá de nuevo.');
+    alert('La librería XLSX todavía no se cargó. Esperá unos segundos y volvé a intentar.');
     return;
   }
-  const wb = XLSX.utils.book_new();
-  const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const m = currentMonth;
+  const dim = daysInMonth(m);
+  const monthName = MONTH_NAMES[m] + ' 2026';
 
-  for(const m of [5,6,7,8,9,10,11,12]){
-    const dim = daysInMonth(m);
-    const monthData = SCHEDULES[m];
-    const aoa = [];
-
-    // Fila 0: días de la semana
-    const row0 = ['Empleado'];
-    for(let d=1; d<=dim; d++) row0.push(DOW[dayOfWeek(m,d)]);
-    aoa.push(row0);
-
-    // Fila 1: números de día
-    const row1 = ['Día'];
-    for(let d=1; d<=dim; d++) row1.push(d);
-    aoa.push(row1);
-
-    // Filas de empleados
-    for(const emp of EMPLOYEES){
-      const row = [emp.name];
-      const shifts = monthData[emp.id];
-      for(let d=0; d<dim; d++){
-        const s = shifts[d] || 'X';
-        row.push(s === 'X' ? '' : s);
-      }
-      aoa.push(row);
-    }
-
-    const ws = XLSX.utils.aoa_to_sheet(aoa);
-
-    // Estilos por celda
-    for(let r=0; r<aoa.length; r++){
-      for(let c=0; c<aoa[r].length; c++){
-        const addr = XLSX.utils.encode_cell({r,c});
-        if(!ws[addr]) continue;
-        const val = String(aoa[r][c] || '');
-        const isHeader = r <= 1;
-        const isEmpCol = c === 0;
-        const shiftKey = ['M','T','N','F','V'].includes(val) ? val : null;
-        const bgColor = shiftKey ? SHIFT_FILL[shiftKey]
-                       : isHeader ? '1F4E78'
-                       : isEmpCol ? 'E8F0FB'
-                       : (!val && !isHeader) ? 'E0E0E0'
-                       : 'FFFFFF';
-        const fontColor = shiftKey ? SHIFT_FONT_COLOR[shiftKey]
-                         : isHeader ? 'FFFFFF' : '222222';
-        ws[addr].s = {
-          font:{ bold: isHeader||isEmpCol||!!shiftKey, color:{ rgb: fontColor } },
-          fill:{ fgColor:{ rgb: bgColor } },
-          alignment:{ horizontal: c===0?'left':'center', vertical:'center' }
-        };
-      }
-    }
-
-    ws['!cols'] = [{ wch:20 }];
-    for(let d=0; d<dim; d++) ws['!cols'].push({ wch:4 });
-
-    XLSX.utils.book_append_sheet(wb, ws, MONTH_NAMES[m]);
+  // Construir hoja con operarios + filas vacía + campo
+  const rows = [];
+  rows.push([monthName]);
+  rows.push([]);
+  // Cabecera días
+  const header = ['Empleado'];
+  for(let d=1; d<=dim; d++) header.push(d);
+  rows.push(header);
+  // Operarios
+  for(const emp of EMPLOYEES){
+    const sched = SCHEDULES[m][emp.id] || [];
+    const row = [emp.name];
+    for(let d=0; d<dim; d++) row.push(sched[d] || '');
+    rows.push(row);
+  }
+  rows.push([]);
+  rows.push(['AB Campo — Jornada Día']);
+  rows.push(header);
+  for(const emp of DAYTIME_EMPLOYEES){
+    if(m < emp.desde) continue;
+    const sched = daytimeSchedules[m] && daytimeSchedules[m][emp.id];
+    if(!sched) continue;
+    const row = [emp.name + ' (' + emp.area + ')'];
+    for(let d=0; d<dim; d++) row.push(sched[d] || '');
+    rows.push(row);
   }
 
-  XLSX.writeFile(wb, 'Diagrama_ABE_2026.xlsx');
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, monthName);
+  XLSX.writeFile(wb, 'Diagrama_ABE_' + monthName.replace(' ', '_') + '.xlsx');
 }
 
 // ============================================================
-// GOOGLE DRIVE — PUBLICAR MES
-// Pegá acá la URL que te da el Apps Script después de desplegarlo
+// PUBLISH TO DRIVE (Apps Script)
 // ============================================================
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMRU9RgWWUeCJ75R6DATQe--fsV-4OXWf0jdFe2ZnHUt-vXb2aXx2VaUqI2ynFfqym/exec';
-
 function publishToDrive(){
-  if(!editMode){ alert('Activá el modo edición primero.'); return; }
-  if(APPS_SCRIPT_URL === 'PEGAR_URL_DEL_APPS_SCRIPT_AQUI'){
-    alert('Configurá primero el Apps Script:\n1. Pegá el código en script.google.com\n2. Desplegalo como Web App\n3. Copiá la URL en la variable APPS_SCRIPT_URL de este archivo');
-    return;
-  }
-
-  const m = currentMonth;
-  const monthName = MONTH_NAMES[m];
-  const dim = daysInMonth(m);
-  const monthData = SCHEDULES[m];
-  const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-
-  // Construir filas de datos y grilla de turnos para coloreo
-  const rows = [];
-  const shiftGrid = [];
-
-  // Fila 0: encabezado días de semana
-  const hRow0 = ['Empleado'];
-  const sRow0 = ['EMP'];
-  for(let d=1; d<=dim; d++){
-    const dow = DOW[dayOfWeek(m,d)];
-    const isWe = dayOfWeek(m,d)===0||dayOfWeek(m,d)===6;
-    hRow0.push(dow);
-    sRow0.push(isWe ? 'WE' : 'HDR');
-  }
-  rows.push(hRow0); shiftGrid.push(sRow0);
-
-  // Fila 1: números de día
-  const hRow1 = ['Día'];
-  const sRow1 = ['EMP'];
-  for(let d=1; d<=dim; d++){
-    const isWe = dayOfWeek(m,d)===0||dayOfWeek(m,d)===6;
-    hRow1.push(d);
-    sRow1.push(isWe ? 'WE' : 'HDR');
-  }
-  rows.push(hRow1); shiftGrid.push(sRow1);
-
-  // Filas de empleados
-  for(const emp of EMPLOYEES){
-    const dataRow = [emp.name];
-    const shiftRow = ['EMP'];
-    const shifts = monthData[emp.id];
-    for(let d=0; d<dim; d++){
-      const s = shifts[d] || 'X';
-      dataRow.push(s === 'X' ? '' : s);
-      shiftRow.push(s);
-    }
-    rows.push(dataRow);
-    shiftGrid.push(shiftRow);
-  }
-
-  const payload = { monthName, rows, shiftGrid };
-
-  const btn = document.getElementById('publishBtn');
-  btn.textContent = '⏳ Publicando...';
-  btn.disabled = true;
-
-  // Abrir en nueva pestaña — usa la sesión de Google ya activa en el navegador
-  const jsonStr = JSON.stringify(payload);
-  const encoded = encodeURIComponent(jsonStr);
-  const url = APPS_SCRIPT_URL + '?data=' + encoded;
-
-  const tab = window.open(url, '_blank');
-
-  // Esperar que el script procese y luego cerrar la pestaña
-  setTimeout(() => {
-    if (tab && !tab.closed) {
-      try { tab.close(); } catch(e) {}
-    }
-    btn.textContent = '☁ Publicar en Drive';
-    btn.disabled = false;
-    alert('✅ ' + monthName + ' publicado en Drive.\nVerificá la planilla de Google Sheets.');
-  }, 5000);
-}
-
-// Mostrar botón Drive solo en modo edición
-function applyModeExtras(){
-  const btn = document.getElementById('publishBtn');
-  if(btn) btn.style.display = editMode ? 'inline-flex' : 'none';
+  window.open(APPS_SCRIPT_URL, '_blank');
 }
 
 // ============================================================
 // INIT
 // ============================================================
+initSchedules();
 initDaytimeSchedules();
-applyMode(); // Arranca en modo solo lectura
+renderTabs();
 render();
+applyMode();
 </script>
 </body>
 </html>

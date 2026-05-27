@@ -918,5 +918,73 @@ function applyMode(){
   applyModeExtras();
 }
 
+function applyModeExtras(){
+  // Mostrar/ocultar botón "Publicar en Drive" según modo
+  const publishBtn = document.getElementById('publishBtn');
+  if(publishBtn) publishBtn.style.display = editMode ? '' : 'none';
+}
+
 // ============================================================
-//
+// EXPORT TO EXCEL (operarios + sección campo)
+// ============================================================
+function exportToExcel(){
+  if(typeof XLSX === 'undefined'){
+    alert('La librería XLSX todavía no se cargó. Esperá unos segundos y volvé a intentar.');
+    return;
+  }
+  const m = currentMonth;
+  const dim = daysInMonth(m);
+  const monthName = MONTH_NAMES[m] + ' 2026';
+
+  // Construir hoja con operarios + filas vacía + campo
+  const rows = [];
+  rows.push([monthName]);
+  rows.push([]);
+  // Cabecera días
+  const header = ['Empleado'];
+  for(let d=1; d<=dim; d++) header.push(d);
+  rows.push(header);
+  // Operarios
+  for(const emp of EMPLOYEES){
+    const sched = SCHEDULES[m][emp.id] || [];
+    const row = [emp.name];
+    for(let d=0; d<dim; d++) row.push(sched[d] || '');
+    rows.push(row);
+  }
+  rows.push([]);
+  rows.push(['AB Campo — Jornada Día']);
+  rows.push(header);
+  for(const emp of DAYTIME_EMPLOYEES){
+    if(m < emp.desde) continue;
+    const sched = daytimeSchedules[m] && daytimeSchedules[m][emp.id];
+    if(!sched) continue;
+    const row = [emp.name + ' (' + emp.area + ')'];
+    for(let d=0; d<dim; d++) row.push(sched[d] || '');
+    rows.push(row);
+  }
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, monthName);
+  XLSX.writeFile(wb, 'Diagrama_ABE_' + monthName.replace(' ', '_') + '.xlsx');
+}
+
+// ============================================================
+// PUBLISH TO DRIVE (Apps Script)
+// ============================================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMRU9RgWWUeCJ75R6DATQe--fsV-4OXWf0jdFe2ZnHUt-vXb2aXx2VaUqI2ynFfqym/exec';
+function publishToDrive(){
+  window.open(APPS_SCRIPT_URL, '_blank');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+initSchedules();
+initDaytimeSchedules();
+renderTabs();
+render();
+applyMode();
+</script>
+</body>
+</html>
