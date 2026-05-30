@@ -146,14 +146,6 @@
   body.view-mode td.shift { cursor:default; pointer-events:none; }
   body.view-mode td.shift:hover { opacity:1; }
 
-  @media (max-width: 500px) {
-    .topbar h1 { font-size: 14px; }
-    .mode-badge, .btn-export { font-size: 11px; padding: 4px 8px; }
-    th.emp-head, td.emp-name { width: 90px; min-width: 90px; font-size: 10px; }
-    .campo-table th.emp-head { width: 90px; min-width: 90px; font-size: 10px; }
-    .campo-table td.dt-name { width: 90px; min-width: 90px; max-width: 90px; font-size: 10px; }
-    .campo-table td.dt-cell { min-width: 26px; height: 24px; }
-  }
 
   /* EXPORT BUTTON */
   .btn-export { background:#217346; color:#fff; display:inline-flex; align-items:center; gap:5px; }
@@ -207,7 +199,7 @@
   .campo-table td.dt-cell.dt-na { background:#e0e0e0; color:#bbb; cursor:default; }
   body.view-mode td.dt-cell { cursor:default; pointer-events:none; }
   body.view-mode td.dt-cell:hover { opacity:1; }
-/* ============ RESPONSIVE (mobile y tablet) ============ */
+  /* ============ RESPONSIVE (mobile y tablet) ============ */
   @media (max-width: 900px) {
     .topbar { padding: 10px 12px; gap: 8px; flex-wrap: wrap; }
     .topbar h1 { font-size: 15px; flex-basis: 100%; }
@@ -241,6 +233,16 @@
     .picker { width: auto; max-width: 90vw; }
     .picker-btn { width: 44px; height: 40px; font-size: 15px; }
   }
+
+  @media (max-width: 500px) {
+    .topbar h1 { font-size: 14px; }
+    .mode-badge, .btn-export { font-size: 11px; padding: 4px 8px; }
+    th.emp-head, td.emp-name { width: 90px; min-width: 90px; font-size: 10px; }
+    .campo-table th.emp-head { width: 90px; min-width: 90px; font-size: 10px; }
+    .campo-table td.dt-name { width: 90px; min-width: 90px; max-width: 90px; font-size: 10px; }
+    .campo-table td.dt-cell { min-width: 26px; height: 24px; }
+  }
+
 </style>
 </head>
 <body>
@@ -384,58 +386,58 @@ const SCHEDULES = {
     ortega:   'MMMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',  // actualizado con horario real
   },
   6: {
-    villega:  'NMMMTTTTTFFFFNNNMMMMTTTTFFFNNN',
-    sosa:     'FNNNMMMMMTTTTFFFNNNNMMMMTTTFFF',
-    lautaro:  'MFFFNNNNNMMMMTTTFFFFNNNNMMMTTT',
-    brian:    'TTTTTFFFFNNNNMMMTTTTFFFNNNNMMM',
+    villega:  'NMMMMTTTFFFNNNMMMTTTTFFFFNNNTT',
+    sosa:     'TFFFFNNNMMMTTTFFFNNNNMMMMTTTFF',
+    lautaro:  'FNNNNMMMTTTFFFNNNMMMMTTTTFFFNN',
+    brian:    'MTTTTFFFNNNMMMTTTFFFFNNNNMMMMM',
     ortega:   'MMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',
     salas:    'X'.repeat(30),
   },
   7: {
-    villega:  'MMMMMTTTTFFFFNNNNMMMMTTTTFFFNNN',
-    sosa:     'NNNNMMMMMTTTTFFFFNNNNMMMMTTTFFF',
-    lautaro:  'FTTTTTFFFNNNNMMMMTTTTFFFNNNNMMM',
-    brian:    'TFFFNNNNNMMMMTTTTFFFFNNNNMMMTTT',
+    villega:  'TFFNNNNNMMMMTTTTTFFFNNNMMMTTTFF',
+    sosa:     'MMMTTTTTFFFFNNNNMMMMTTTFFFNNNNN',
+    lautaro:  'NNNMMMMMTTTTFFFFNNNNMMMTTTFFFTT',
+    brian:    'TTTFFFFNNNNNMMMMMTTTFFFNNNMMMMM',
     ortega:   'MMMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',
     salas:    'X'.repeat(31),
   },
   8: {
-    villega:  'MMMMMTTTTFFFFNNNMMMTTTFFFNNNNNM',
-    sosa:     'NNNNNMMMMTTTTFFFNNNMMMTTTTFFFFN',
-    lautaro:  'TFFFFNNNNMMMMTTTFFFNNNMMMMTTTTT',
-    brian:    'FTTTTTFFFNNNNMMMTTTFFFNNNMMMMMT',
+    villega:  'NMMMMMTTTFFFNNNMMMMTTTTTFFFFNNN',
+    sosa:     'MTTFFFNNNMMMTTTFFFFNNNNNMMMMTTT',
+    lautaro:  'TFFNNNMMMTTTFFFNNNNMMMMMTTTTTFF',
+    brian:    'FNNTTTFFFNNNMMMTTTTTFFFNNNNNMMM',
     ortega:   'MMMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',
     salas:    'X'.repeat(31),
   },
   9: {
-    villega:  'MMMMTTTFFFNNNNNMMMMTTTFFFNNNNF',
-    sosa:     'NNNNMMMTTTTTFFFNNNNMMMTTTFFFFN',
-    lautaro:  'FTTTFFFNNNMMMMMTTTTFFFNNNMMMMM',
-    brian:    'TFFFNNNMMMMMTTTFFFFNNNMMMTTTTT',
+    villega:  'NMMMMTTTTTFFFNNNNMMMTTTFFFFNNN',
+    sosa:     'TFFFFNNNNMMMMMTTTFFFNNNMMMMTTT',
+    lautaro:  'FNNNNMMMMTTTTTFFFNNNMMMTTTTFFF',
+    brian:    'MTTTTFFFFNNNNMMMMTTTFFFNNNNMMM',
     ortega:   'MMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',
     salas:    'X'.repeat(30),
   },
   10: {
-    villega:  'MTTTFFFNNNNMMMMTTTFFFFNNNMMMMTT',
-    sosa:     'NNNNMMMTTTTFFFFNNNMMMMTTTTFFFNN',
-    lautaro:  'TFFFNNNMMMMTTTTFFFNNNNMMMTTTTTF',
-    brian:    'FMMMTTTFFFNNNNNMMMTTTTFFFNNNNMM',
+    villega:  'NMMMTTTTFFFFNNNNNMMMMMTTTTFFFTT',
+    sosa:     'TFFFNNNNMMMMMTTTTTFFFFNNNNMMMMM',
+    lautaro:  'FNNNMMMMTTTTTFFFFNNNNNMMMMTTTFF',
+    brian:    'MTTTFFFFNNNNNMMMMMTTTTTFFFNNNNN',
     ortega:   'MMMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',
     salas:    'X'.repeat(31),
   },
   11: {
-    villega:  'FNNNMMMTTTTTFFFNNNNMMMMTTTTFFF',
-    sosa:     'MTTTFFFNNNNMMMMTTTTFFFFNNNNMMM',
-    lautaro:  'NMMMTTTFFFFNNNNMMMMTTTTTFFFNNN',
-    brian:    'TFFFNNNMMMMMTTTFFFFNNNNMMMMTTT',
+    villega:  'TFFNNNMMMMTTTTFFFFNNNNMMMMTTTF',
+    sosa:     'TTTFFFNNNNMMMMTTTTFFFFNNNNMMMM',
+    lautaro:  'NNNMMMTTTTFFFFNNNNMMMMMTTTFFFT',
+    brian:    'MMMTTTFFFFNNNNMMMMTTTTTFFFNNNN',
     ortega:   'MMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',
     salas:    'X'.repeat(30),
   },
   12: {
-    villega:  'MMTTTTTFFFNNNNMMMTTTTFFFFNNNNMM',
-    sosa:     'TTFFFNNNNNMMMMTTTFFFFNNNNMMMMTT',
-    lautaro:  'NNMMMMMTTTTFFFNNNMMMMTTTTFFFFNN',
-    brian:    'FFNNNMMMMMTTTTFFFNNNNMMMMTTTTFF',
+    villega:  'FNNMMMMMTTTTFFFNNNNMMMTTTTFFFTT',
+    sosa:     'MFFNNNNNMMMTTTTFFFNNNNMMMMTTTFF',
+    lautaro:  'TTTFFFFNNNNMMMMTTTTFFFNNNNMMMMM',
+    brian:    'NMMTTTTTFFFNNNNMMMMTTTFFFFNNNNN',
     ortega:   'MMMMMMFFFMMMMMFFFFMMMMMMMMMMMMM',
     salas:    'X'.repeat(31),
   },
